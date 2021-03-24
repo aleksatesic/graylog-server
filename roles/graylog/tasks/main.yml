@@ -36,8 +36,15 @@
       name: mongodb-org
       state: present
       update_cache: yes
-    notify: restart mongodb
     become: yes
+
+  - name: Enable MongoDB 
+    systemd:
+      name: mongod
+      enabled: yes
+      daemon_reload: yes
+      state: restarted
+    become: yes 
 
   - meta: flush_handlers
 
@@ -78,7 +85,7 @@
   - name: Install Graylog server repo
     apt:
       deb: "/tmp/graylog-4.0-repository_latest.deb"
-    sudo: true
+    become: yes
 
   - name: Install Graylog server
     apt:
