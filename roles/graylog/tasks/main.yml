@@ -77,6 +77,14 @@
       - { src: elasticsearch.yml.j2, dest: /etc/elasticsearch/elasticsearch.yml }
     become: yes
 
+  - name: Enable Elasticsearch 
+    systemd:
+      name: elasticsearch
+      enabled: yes
+      daemon_reload: yes
+      state: restarted
+    become: yes 
+
   - name: "Graylog repository package should be downloaded"
     get_url:
       url: https://packages.graylog2.org/repo/packages/graylog-4.0-repository_latest.deb
@@ -104,5 +112,12 @@
     with_items:
       - { src: server.conf.j2, dest: /etc/graylog/server/server.conf }
     become: yes
-
+    
+  - name: Enable Graylog 
+    systemd:
+      name: graylog-server
+      enabled: yes
+      daemon_reload: yes
+      state: restarted
+    become: yes 
 
