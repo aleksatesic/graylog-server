@@ -1,0 +1,8 @@
+---
+# file: host_vars/vagrant.yml
+
+ansible_hostname: graylog-test.local
+ansible_ssh_host: 192.168.111.121
+ansible_ssh_port: 22
+ansible_ssh_user: vagrant
+ansible_private_key_file: .vagrant/machines/default/virtualbox/private_key

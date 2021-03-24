@@ -1,0 +1,104 @@
+---
+# name: roles/graylog2/main.yml
+
+  - name: Install common packages
+    apt:
+      pkg:
+        - openjdk-8-jre-headless
+        - apt-transport-https
+        - uuid-runtime
+        - pwgen
+        - fail2ban
+      state: present
+      update_cache: yes
+      install_recommends: yes
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+      DEBCONF_NONINTERACTIVE_SEEN: true
+      UCF_FORCE_CONFOLD: 1
+    become: yes
+
+  - name: Add signing key for MongoDB
+    apt_key:
+      keyserver: hkp://keyserver.ubuntu.com:80
+      id: 9DA31620334BD75D9DCB49F368818C72E52529D4
+    become: yes
+
+  - name: Add MongoDB repo
+    apt_repository:
+      repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse'
+      state: present
+      filename: mongodb-org-4.0.list
+    become: yes
+
+  - name: Install MongoDB
+    apt:
+      name: mongodb-org
+      state: present
+      update_cache: yes
+    notify: restart mongodb
+    become: yes
+
+  - meta: flush_handlers
+
+  - name: Add apt signing key for Elasticsearch
+    apt_key:
+      url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      state: present
+    become: yes
+
+  - name: Add Elasticsearch repo
+    apt_repository:
+      repo: 'deb https://artifacts.elastic.co/packages/oss-7.x/apt stable main'
+      state: present
+      filename: elastic-7.x.list
+    become: yes
+
+  - name: Install Elasticsearch
+    apt:
+      name: elasticsearch-oss
+      state: present
+      update_cache: yes
+    notify: restart mongodb
+    become: yes
+
+  - name: Set ES configuration file
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: elasticsearch.yml.j2, dest: /etc/elasticsearch/elasticsearch.yml }
+    become: yes
+
+  - name: "Graylog repository package should be downloaded"
+    get_url:
+      url: https://packages.graylog2.org/repo/packages/graylog-4.0-repository_latest.deb
+      dest: "/tmp/graylog-4.0-repository_latest.deb"
+
+  - name: Install Graylog server repo
+    apt:
+      deb: "/tmp/graylog-4.0-repository_latest.deb"
+    sudo: true
+
+  - name: Install Graylog server
+    apt:
+      pkg:
+        - graylog-server
+        - graylog-integrations-plugins
+      state: present
+      update_cache: yes
+      install_recommends: yes
+    become: yes
+
+  - name: Set Graylog configuration file
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: server.conf.j2, dest: /etc/graylog/server/server.conf }
+    become: yes
+
+
+  handlers:
+    - name: restart mongodb
+      service: name=mongodb state=restarted
