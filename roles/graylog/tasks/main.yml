@@ -99,6 +99,3 @@
     become: yes
 
 
-  handlers:
-    - name: restart mongodb
-      service: name=mongodb state=restarted

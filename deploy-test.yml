@@ -1,4 +1,3 @@
 - hosts: vagrant
   roles:
     - graylog
-    - deploy
