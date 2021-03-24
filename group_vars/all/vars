@@ -1,0 +1,4 @@
+graylog:
+  root_username: admin
+  password_secret: "{{ vault_graylog_password_secret }}"
+  password_sha: "{{ vault_graylog_password_sha }}"

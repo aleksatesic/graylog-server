@@ -47,10 +47,10 @@ if [ ${user} = "vagrant" ] || [ ${user} = "ubuntu" ]; then
   playbook=deploy-test.yml
   info;
   echo graylog-test
-  ANSIBLE_COW_SELECTION=random ansible-playbook -i graylog-test ${playbook}
+  ANSIBLE_COW_SELECTION=random ansible-playbook -i graylog-test ${playbook} --ask-vault-pass
 else
   playbook=deploy-production.yml
   info;
   echo graylog-production
-  ansible-playbook -v -i graylog-production ${playbook} --ask-become-pass
+  ansible-playbook -v -i graylog-production ${playbook} --ask-become-pass --ask-vault-pass
 fi
