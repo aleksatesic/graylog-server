@@ -1,0 +1,9 @@
+#!/bin/bash
+
+dump_dir="/mnt/HC_Volume_3273375/backups/mongodb"
+
+# perfom database dump and compress it
+mongodump --db graylog --gzip --out ${dump_dir}/`date +"%m-%d-%y"` >>mongodb_backup.out.log 2>&1
+
+# remove all backups older than 30 days
+find ${dump_dir} -mtime +30 -exec rm -rf {} \;

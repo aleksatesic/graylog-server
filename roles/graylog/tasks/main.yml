@@ -69,13 +69,13 @@
     notify: restart mongodb
     become: yes
 
-  - name: Set ES configuration file
-    template:
-      src: "{{ item.src }}"
-      dest: "{{ item.dest }}"
-    with_items:
-      - { src: elasticsearch.yml.j2, dest: /etc/elasticsearch/elasticsearch.yml }
-    become: yes
+  # - name: Set ES configuration file
+  #   template:
+  #     src: "{{ item.src }}"
+  #     dest: "{{ item.dest }}"
+  #   with_items:
+  #     - { src: elasticsearch.yml.j2, dest: /etc/elasticsearch/elasticsearch.yml }
+  #   become: yes
 
   - name: Enable Elasticsearch 
     systemd:

@@ -30,13 +30,13 @@ cluster.name: graylog
 #
 # Path to directory where to store the data (separate multiple locations by comma):
 #
-# path.data: /var/lib/elasticsearch
-# path.data: /mnt/HC_Volume_3273375/elasticsearch/
+#path.data: /var/lib/elasticsearch
+path.data: /mnt/HC_Volume_3273375/elasticsearch/
 #
 # Path to log files:
 #
-# path.logs: /var/log/elasticsearch
-# path.repo: ["/mnt/HC_Volume_3273375/backups/elasticsearch_backups"]
+path.logs: /var/log/elasticsearch
+#path.repo: ["/mnt/HC_Volume_3273375/backups/elasticsearch_backups"]
 #
 # ----------------------------------- Memory -----------------------------------
 #
@@ -71,7 +71,7 @@ cluster.name: graylog
 #
 # Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
 #
-#discovery.zen.minimum_master_nodes:
+#discovery.zen.minimum_master_nodes: 
 #
 # For more information, consult the zen discovery module documentation.
 #
@@ -88,8 +88,7 @@ cluster.name: graylog
 # Require explicit names when deleting indices:
 #
 #action.destructive_requires_name: true
-action.auto_create_index: false
-#cluster.routing.allocation.disk.threshold_enabled: false
+cluster.routing.allocation.disk.threshold_enabled: false
 #cluster.routing.allocation.disk.watermark.flood_stage: 95
 #cluster.routing.allocation.disk.watermark.low: 90
 #cluster.routing.allocation.disk.watermark.high: 20gb
