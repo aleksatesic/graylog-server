@@ -121,3 +121,19 @@
       state: restarted
     become: yes 
 
+  - name: Make sure folder for backup scripts exists
+    file:
+      path: /home/.backup_scripts
+      state: directory
+      mode: 0755
+    become: yes
+  
+  - name: Copy backup scripts
+    template:
+      src: "{{ item.src }}"
+      dest: "/home/.backup_scripts/{{ item.dest }}"
+      mode: 0755
+    with_items:
+      - { src: mongodb_backup.sh.j2, dest:  mongodb_backup.sh }
+      - { src: es_backup.sh.j2, dest:  es_backup.sh }
+    become: yes
