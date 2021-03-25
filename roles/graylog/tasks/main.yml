@@ -38,14 +38,6 @@
       update_cache: yes
     become: yes
 
-  - name: Enable MongoDB 
-    systemd:
-      name: mongod
-      enabled: yes
-      daemon_reload: yes
-      state: restarted
-    become: yes 
-
   - meta: flush_handlers
 
   - name: Add apt signing key for Elasticsearch
@@ -66,16 +58,15 @@
       name: elasticsearch-oss
       state: present
       update_cache: yes
-    notify: restart mongodb
     become: yes
 
-  # - name: Set ES configuration file
-  #   template:
-  #     src: "{{ item.src }}"
-  #     dest: "{{ item.dest }}"
-  #   with_items:
-  #     - { src: elasticsearch.yml.j2, dest: /etc/elasticsearch/elasticsearch.yml }
-  #   become: yes
+  - name: Set ES configuration file
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: elasticsearch.yml.j2, dest: /etc/elasticsearch/elasticsearch.yml }
+    become: yes
 
   - name: Enable Elasticsearch 
     systemd:
@@ -121,19 +112,10 @@
       state: restarted
     become: yes 
 
-  - name: Make sure folder for backup scripts exists
-    file:
-      path: /home/.backup_scripts
-      state: directory
-      mode: 0755
-    become: yes
-  
-  - name: Copy backup scripts
-    template:
-      src: "{{ item.src }}"
-      dest: "/home/.backup_scripts/{{ item.dest }}"
-      mode: 0755
-    with_items:
-      - { src: mongodb_backup.sh.j2, dest:  mongodb_backup.sh }
-      - { src: es_backup.sh.j2, dest:  es_backup.sh }
-    become: yes
+  - name: Enable MongoDB 
+    systemd:
+      name: mongod
+      enabled: yes
+      daemon_reload: yes
+      state: restarted
+    become: yes 
